@@ -18,6 +18,7 @@ const Container = styled("div")(({ theme }) => ({
 }));
 
 export default function AppSlider() {
+  
   return (
     <Container>
       <Box className="breadcrumb">

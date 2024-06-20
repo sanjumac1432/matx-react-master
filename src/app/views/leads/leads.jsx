@@ -18,24 +18,31 @@ const Container = styled("div")(({ theme }) => ({
 
 export default function Lead() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const[ editId, setEditId] = useState(null)
-
-  
+  const [editId, setEditId] = useState(null);
 
   const openDrawer = () => {
     setSidebarOpen(!sidebarOpen);
   };
 
-  const handelEdit=(id)=>{
-    setEditId(id)
-    setSidebarOpen(true)
-  }
+  const handelEdit = (id) => {
+    setEditId(id);
+    setSidebarOpen(true);
+  };
 
   return (
     <>
-      <LeadFrom open={sidebarOpen} onClose={openDrawer} editId={editId}/>
-      <Button onClick={openDrawer}>+Add Leads</Button>
-      <LeadGrid open={sidebarOpen} openDrawer={openDrawer} handelEdit={handelEdit}/>
+      <LeadFrom open={sidebarOpen} onClose={openDrawer} editId={editId} setEditId={setEditId} />
+
+      <Button
+        onClick={() => {
+          openDrawer();
+          setEditId(null);
+        }}
+      >
+        +Add Leads
+      </Button>
+
+      <LeadGrid open={sidebarOpen} openDrawer={openDrawer} handelEdit={handelEdit} editI={editId} />
     </>
   );
 }

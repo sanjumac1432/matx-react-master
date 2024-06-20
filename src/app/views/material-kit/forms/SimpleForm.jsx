@@ -13,7 +13,12 @@ import {
   styled
 } from "@mui/material";
 import { Span } from "app/components/Typography";
-import { AddEditInfoRequest, LeadLoading, editLeadRequest } from "app/slice/slice";
+import {
+  AddEditInfoRequest,
+  LeadLoading,
+  editLeadRequest,
+  editLeadRequestSuccess
+} from "app/slice/slice";
 import { useEffect, useState } from "react";
 import { TextValidator, ValidatorForm } from "react-material-ui-form-validator";
 import { useDispatch, useSelector } from "react-redux";
@@ -23,7 +28,9 @@ const TextField = styled(TextValidator)(() => ({
   marginBottom: "16px"
 }));
 
-const SimpleForm = ({ editId }) => {
+const SimpleForm = (props) => {
+  const { editId, setEditId, onClose } = props;
+
   const [state, setState] = useState({
     leadStatus: "",
     leadName: "",
@@ -36,7 +43,6 @@ const SimpleForm = ({ editId }) => {
   console.log(d);
   const dis = useDispatch();
 
-
   console.log(d);
   useEffect(() => {
     if (editId) {
@@ -45,7 +51,8 @@ const SimpleForm = ({ editId }) => {
   }, [editId]);
 
   useEffect(() => {
-    if (d) {
+    //&& editId != null
+    if (d && editId != null) {
       setState({
         leadStatus: d.leadStatus,
         leadName: d.leadName,
@@ -67,6 +74,7 @@ const SimpleForm = ({ editId }) => {
   const handleSubmit = () => {
     if (editId) {
       dis(AddEditInfoRequest({ ...state, _id: editId }));
+      // setEditId(null);
     } else {
       dis(LeadLoading(state));
     }
@@ -77,6 +85,13 @@ const SimpleForm = ({ editId }) => {
       leadPhoneNumber: "",
       moduleId: "665aa535d8c91a9090d0db43"
     });
+
+    // dis({
+    //   leadStatus: "",
+    //   leadName: "",
+    //   leadEmail: "",
+    //   leadPhoneNumber: ""
+    // });
   };
 
   const handleChange = (event) => {
@@ -87,7 +102,13 @@ const SimpleForm = ({ editId }) => {
 
   return (
     <div>
-      <ValidatorForm onSubmit={handleSubmit} onError={() => null}>
+      <ValidatorForm
+        onSubmit={() => {
+          handleSubmit();
+          onClose();
+        }}
+        onError={() => null}
+      >
         <Grid container spacing={6}>
           <Grid item lg={6} md={6} sm={12} xs={12} sx={{ mt: 2 }}>
             <FormControl

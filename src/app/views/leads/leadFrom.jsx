@@ -15,18 +15,18 @@ const Container = styled("div")(({ theme }) => ({
   }
 }));
 export default function LeadFrom(props) {
-  const { open, onClose,editId} = props;
+  const { open, onClose, editId, setEditId } = props;
   return (
     <Drawer anchor="right" open={open} onClose={onClose}>
       {/* Your sidebar content */}
       <Container>
         <Stack spacing={3}>
           <SimpleCard title="Add Lead">
-            <SimpleForm  editId={editId}/>
+            <SimpleForm editId={editId} setEditId={setEditId} onClose={onClose} />
           </SimpleCard>
         </Stack>
       </Container>
-      <Button onClick={onClose}>Close Sidebar</Button>
+      {/* <Button onClick={onClose}>Close Sidebar</Button> */}
     </Drawer>
   );
 }

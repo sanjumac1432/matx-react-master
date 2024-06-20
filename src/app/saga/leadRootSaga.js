@@ -1,9 +1,10 @@
 import { all } from "redux-saga/effects";
 
-import { watcherLead, watcherLeadDelete, watcherLeadEdit, watcherLeadEditInfo, watcherLeadGet } from "./lead.saga";
+import { watcherLead, watcherLeadChangeStatus, watcherLeadDelete, watcherLeadEdit, watcherLeadEditInfo, watcherLeadGet } from "./lead.saga";
 
 function* rootSaga() {
-  yield all([watcherLead(),watcherLeadGet(),watcherLeadDelete(),watcherLeadEdit(),watcherLeadEditInfo()]);
+  //watcherLeadChangeStatus()
+  yield all([watcherLead(),watcherLeadGet(),watcherLeadDelete(),watcherLeadEdit(),watcherLeadEditInfo(),watcherLeadChangeStatus()]);
 }
 
 export default rootSaga;

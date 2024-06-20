@@ -25,11 +25,18 @@ export const editLead = async (editId) => {
   return data.data;
 };
 
-
 export const AddEditInfo = async (editId) => {
   console.log(editId);
 
   let data = await authFetch.put("/form/edit/" + editId._id, editId);
+
+  return data.data;
+};
+
+export const changeStatus = async (changeId) => {
+  console.log(changeId);
+
+  let data = await authFetch.put("lead/changeStatus/" + changeId._id, changeId);
 
   return data.data;
 };

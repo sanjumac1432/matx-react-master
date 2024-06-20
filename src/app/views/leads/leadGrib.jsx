@@ -1,5 +1,5 @@
 import { AgGridReact } from "ag-grid-react";
-import { LeadLoading, deleteLoading, getLeadLoading } from "app/slice/slice";
+import { LeadLoading, changeRequest, deleteLoading, getLeadLoading } from "app/slice/slice";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
 import React from "react";
@@ -16,30 +16,33 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import { Button } from "@mui/material";
+import { Button, FormControl, Select } from "@mui/material";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import CallIcon from "@mui/icons-material/Call";
 import EmailIcon from "@mui/icons-material/Email";
 
-export const LeadGrid = ({ open,handelEdit }) => {
+
+export const LeadGrid = ({ open, handelEdit, editId }) => {
   const leadSelect = useSelector((state) => state?.lead?.data);
+  const [openDialog, setOpenDialog] = useState(false);
+
   console.log(leadSelect);
   const Dis = useDispatch();
 
   // delete row data code here
   const [ids, setId] = useState(null);
 
+  useEffect(() => {
+    Dis(getLeadLoading());
+  }, [open, openDialog]);
+
   const handelDelete = () => {
     Dis(deleteLoading([ids]));
     setOpenDialog(false);
   };
 
-
-
-
   // open modal dialog box code here
-  const [openDialog, setOpenDialog] = useState(false);
 
   const OpenDialogBox = () => {
     setOpenDialog(true);
@@ -49,7 +52,7 @@ export const LeadGrid = ({ open,handelEdit }) => {
     setOpenDialog(false);
   };
 
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
   const open1 = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -58,13 +61,78 @@ export const LeadGrid = ({ open,handelEdit }) => {
     setAnchorEl(null);
   };
 
-  useEffect(() => {
-    Dis(getLeadLoading());
-  }, [open, openDialog]);
-
   const ITEM_HEIGHT = 48;
   const [colDef, setColDef] = useState([
-    { field: "leadStatus" },
+    {
+      field: "leadStatus",
+      cellRenderer: (props) => {
+        // const handleChange = (event) => {
+        //   Dis(
+        //     changeRequest(event.target.value,
+        //       _id:props.editId)
+        //   );
+        // };
+        const handleChange = (event, id) => {
+          Dis(changeRequest({ _id: id, leadStatus: event.target.value }));
+        };
+
+        return (
+          <>
+            <FormControl
+              item
+              lg={6}
+              md={6}
+              sm={12}
+              xs={12}
+              sx={{ mb: 2, minWidth: 200 }}
+              size="large"
+            >
+              <Select
+                labelId="demo-select-small-label"
+                id="demo-select-small"
+                name="leadStatus"
+                value={props.value}
+                onChange={(event) => handleChange(event, props.data._id)}
+                sx={{
+                  width: 100,
+                  textTransform: "capitalize",
+                  p: 0,
+                  height: 30,
+                  border:
+                    props.value === "active"
+                      ? "1px solid #4d8f3a"
+                      : props.value === "pending"
+                      ? "1px solid #a37f08"
+                      : props.value === "sold"
+                      ? " 1px solid #DB5436"
+                      : "initial",
+                  background:
+                    props.value === "active"
+                      ? "#eaf9e6"
+                      : props.value === "pending"
+                      ? "#fbf4dd"
+                      : props.value === "sold"
+                      ? " #ffeeeb"
+                      : "initial",
+                  color:
+                    props.value === "active"
+                      ? "#4d8f3a"
+                      : props.value === "pending"
+                      ? "#a37f08 "
+                      : props.value === "sold"
+                      ? " #DB5436"
+                      : "initial"
+                }}
+              >
+                <MenuItem value="active">Active</MenuItem>
+                <MenuItem value="pending">Pending</MenuItem>
+                <MenuItem value="sold">Sold</MenuItem>
+              </Select>
+            </FormControl>
+          </>
+        );
+      }
+    },
     { field: "leadName" },
     { field: "leadEmail" },
     { field: "leadPhoneNumber" },
@@ -113,7 +181,7 @@ export const LeadGrid = ({ open,handelEdit }) => {
       >
         <MenuItem
           onClick={() => {
-            handelEdit(ids)
+            handelEdit(ids);
             handleClose();
           }}
         >
@@ -155,7 +223,7 @@ export const LeadGrid = ({ open,handelEdit }) => {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={CloseDialogBox}>Disagree</Button>
+          <Button onClick={CloseDialogBox}>cancel</Button>
           <Button onClick={handelDelete} autoFocus>
             Delete
           </Button>

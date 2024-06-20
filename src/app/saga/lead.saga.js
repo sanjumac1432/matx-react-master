@@ -5,6 +5,9 @@ import {
   LeadError,
   LeadLoading,
   Leadsuc,
+  changeError,
+  changeRequest,
+  changeSuc,
   deleteError,
   deleteLoading,
   deleteSuc,
@@ -15,7 +18,7 @@ import {
   getLeadLoading,
   getLeadSuc
 } from "app/slice/slice";
-import addlead, { AddEditInfo, deleteLead, editLead, getLead } from "app/leadservices/leadservice";
+import addlead, { AddEditInfo, changeStatus, deleteLead, editLead, getLead } from "app/leadservices/leadservice";
 import { call, put, takeEvery } from "redux-saga/effects";
 
 //function for post lead
@@ -89,4 +92,17 @@ function* asyncLeadEditInfo(action) {
 
 export function* watcherLeadEditInfo() {
   yield takeEvery(AddEditInfoRequest().type, asyncLeadEditInfo);
+}
+
+function* asyncLeadChangeStatus(action) {
+  try {
+    let d1 = yield call(changeStatus, action.payload);
+    yield put(changeSuc(d1));
+  } catch (error) {
+    yield put(changeError(error));
+  }
+}
+
+export function* watcherLeadChangeStatus() {
+  yield takeEvery(changeRequest().type, asyncLeadChangeStatus);
 }

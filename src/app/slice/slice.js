@@ -7,7 +7,8 @@ const initialState = {
   isLoading: false,
   DeleteInfo: {},
   editObj: {},
-  AddEditInfo: {}
+  AddEditInfo: {},
+  changeStatus: {}
 };
 
 const leadSlice = createSlice({
@@ -68,6 +69,17 @@ const leadSlice = createSlice({
     AddEditInfoError: (state, action) => {
       state.isLoading = false;
       state.error = action.payload;
+    },
+    changeRequest: (state, action) => {
+      state.isLoading = true;
+    },
+    changeSuc: (state, action) => {
+      state.isLoading = false;
+      state.changeStatus = action.payload;
+    },
+    changeError: (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload;
     }
   }
 });
@@ -87,7 +99,10 @@ export const {
   editLeadRequestSuccess,
   AddEditInfoRequest,
   AddEditInfoSuc,
-  AddEditInfoError
+  AddEditInfoError,
+  changeError,
+  changeRequest,
+  changeSuc
 } = leadSlice.actions;
 
 export default leadSlice.reducer;
