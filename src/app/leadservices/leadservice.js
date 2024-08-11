@@ -46,3 +46,9 @@ export const CallDetailsSend = async (call) => {
 
   return data.data;
 };
+
+
+export const sendEmailData = async(email)=>{
+let data = await authFetch.post("email/add", email)
+return data.data
+}

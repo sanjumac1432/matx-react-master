@@ -10,7 +10,8 @@ const initialState = {
   editObj: {},
   AddEditInfo: {},
   changeStatus: {},
-  callDetails: {}
+  callDetails: {},
+  emailDetails: {}
 };
 
 const leadSlice = createSlice({
@@ -93,6 +94,17 @@ const leadSlice = createSlice({
     callDetailsError: (state, action) => {
       state.isLoading = false;
       state.error = action.payload;
+    },
+    emailDetailsRequest: (state, action) => {
+      state.isLoading = true;
+    },
+    emailDetailsSuc: (state, action) => {
+      state.isLoading = false;
+      state.emailDetails = action.payload;
+    },
+    emailDetailsError: (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload;
     }
   }
 });
@@ -118,8 +130,10 @@ export const {
   changeSuc,
   callDetailsError,
   callDetailsSuc,
-  callDetailsRequest
-
+  callDetailsRequest,
+  emailDetailsError,
+  emailDetailsSuc,
+  emailDetailsRequest
 } = leadSlice.actions;
 
 export default leadSlice.reducer;

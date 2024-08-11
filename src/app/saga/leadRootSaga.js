@@ -1,6 +1,7 @@
 import { all } from "redux-saga/effects";
 
 import {
+  watchEmailData,
   watcherCallLead,
   watcherLead,
   watcherLeadChangeStatus,
@@ -19,7 +20,8 @@ function* rootSaga() {
     watcherLeadEdit(),
     watcherLeadEditInfo(),
     watcherLeadChangeStatus(),
-    watcherCallLead()
+    watcherCallLead(),
+    watchEmailData()
   ]);
 }
 

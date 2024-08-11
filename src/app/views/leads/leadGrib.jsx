@@ -375,6 +375,7 @@ import {
   callDetailsRequest,
   changeRequest,
   deleteLoading,
+  emailDetailsRequest,
   getLeadLoading
 } from "app/slice/slice";
 import "ag-grid-community/styles/ag-grid.css";
@@ -402,19 +403,10 @@ export const LeadGrid = ({ open, handelEdit, editId }) => {
 
   const [openDialog, setOpenDialog] = useState(false);
   const [openFormModal, setOpenFromModal] = useState(false);
+  const [handelOpenEmailModal, setHandelOpenEmailModal] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [ids, setId] = useState(null);
-  const [callData, SetCallData] = useState({
-    createByLead: "",
-    recipient: "",
-    startDate: "",
-    callDuration: "",
-    callNotes: "",
-    createByContact: "",
-    createBy: "64d33173fd7ff3fa0924a109",
-    sender: "64d33173fd7ff3fa0924a109"
-  });
-  const { recipient, startDate, callDuration, callNotes } = callData;
+
   const ITEM_HEIGHT = 48;
   const Dis = useDispatch();
   const open1 = Boolean(anchorEl);
@@ -422,6 +414,7 @@ export const LeadGrid = ({ open, handelEdit, editId }) => {
   useEffect(() => {
     Dis(getLeadLoading());
   }, [open, openDialog]);
+
   console.log(leadSelect);
   const handleClick = (event, id) => {
     setAnchorEl(event.currentTarget);
@@ -433,6 +426,62 @@ export const LeadGrid = ({ open, handelEdit, editId }) => {
     setAnchorEl(null);
   };
 
+  // state for create call
+  const [callData, SetCallData] = useState({
+    createByLead: "",
+    recipient: "",
+    startDate: "",
+    callDuration: "",
+    callNotes: "",
+    createByContact: "",
+    createBy: "64d33173fd7ff3fa0924a109",
+    sender: "64d33173fd7ff3fa0924a109"
+  });
+  const { recipient, startDate, callDuration, callNotes } = callData;
+
+  // create call state end
+
+  //  create state for create email
+
+  const [createEmail, setCreateEmail] = useState({
+    createByLead: "",
+    createBy: "64d33173fd7ff3fa0924a109",
+    sender: "64d33173fd7ff3fa0924a109",
+    createByContact: "",
+    recipient: "",
+    startDate: "",
+    subject: "",
+    message: ""
+  });
+
+  const handelEmailModal = () => {
+    const selectedLead = leadSelect.find((lead) => lead._id === ids);
+    setCreateEmail({
+      ...createEmail,
+      createByLead: ids,
+      recipient: selectedLead.leadEmail
+    });
+  };
+
+  const handelEmailOnChange = (event) => {
+    setCreateEmail({ ...createEmail, [event.target.name]: event.target.value });
+  };
+  const handleSaveEmailData = () => {
+    Dis(emailDetailsRequest(createEmail));
+    setCreateEmail({
+      createByLead: "",
+      createBy: "64d33173fd7ff3fa0924a109",
+      sender: "64d33173fd7ff3fa0924a109",
+      createByContact: "",
+      recipient: "",
+      startDate: "",
+      subject: "",
+      message: ""
+    });
+  };
+  // end create email  code
+
+  // function for opne create call modal and set id for specific row
   const handleClickOpen = () => {
     // Find the selected lead data by ID
     const selectedLead = leadSelect.find((lead) => lead._id === ids);
@@ -471,6 +520,10 @@ export const LeadGrid = ({ open, handelEdit, editId }) => {
     console.log(callData);
   };
 
+  // End function for opne create call modal and set id for specific row
+
+  // function for delete Row Data
+
   const handelDelete = () => {
     Dis(deleteLoading([ids]));
     setOpenDialog(false);
@@ -483,6 +536,8 @@ export const LeadGrid = ({ open, handelEdit, editId }) => {
   const CloseDialogBox = () => {
     setOpenDialog(false);
   };
+
+  // delete function code end
 
   const colDef = [
     {
@@ -606,7 +661,13 @@ export const LeadGrid = ({ open, handelEdit, editId }) => {
           <CallIcon style={{ color: "gray", marginRight: "5px" }} />
           <span>Create Call</span>
         </MenuItem>
-        <MenuItem>
+        <MenuItem
+          onClick={() => {
+            setHandelOpenEmailModal(true);
+            handelEmailModal();
+            handleClose();
+          }}
+        >
           <EmailIcon style={{ color: "gray", marginRight: "5px" }} />
           <span>Email Send</span>
         </MenuItem>
@@ -705,6 +766,82 @@ export const LeadGrid = ({ open, handelEdit, editId }) => {
           </Button>
         </DialogActions>
       </Dialog>
+      {/* // call modal close here */}
+
+      {/* email modal open here */}
+
+      <Dialog fullWidth open={handelOpenEmailModal}>
+        <DialogTitle>Add Email</DialogTitle>
+        <DialogContent>
+          <InputLabel id="demo-select-small-label">Recipient</InputLabel>
+          <TextField
+            autoFocus
+            disabled
+            required
+            margin="dense"
+            id="recipient"
+            name="recipient"
+            value={createEmail.recipient}
+            type="text"
+            fullWidth
+          />
+
+          <Grid item lg={6} md={6} sm={12} xs={12} sx={{ mt: 2 }}>
+            <InputLabel id="demo-select-small-label">Start Date</InputLabel>
+            <TextField
+              autoFocus
+              required
+              margin="dense"
+              value={createEmail.startDate}
+              onChange={handelEmailOnChange}
+              type="datetime-local"
+              name="startDate"
+              fullWidth
+            />
+            <InputLabel id="demo-select-small-label">Subject</InputLabel>
+            <TextField
+              autoFocus
+              fullWidth
+              required
+              margin="dense"
+              value={createEmail.subject}
+              onChange={handelEmailOnChange}
+              type="text"
+              name="subject"
+            />
+          </Grid>
+          <InputLabel id="demo-select-small-label">Massage</InputLabel>
+          <TextField
+            autoFocus
+            fullWidth
+            required
+            margin="dense"
+            type="text"
+            name="message"
+            onChange={handelEmailOnChange}
+            value={createEmail.message}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => {
+              setHandelOpenEmailModal(false);
+            }}
+          >
+            Close
+          </Button>
+          <Button
+            type="button"
+            onClick={() => {
+              handleSaveEmailData();
+              setHandelOpenEmailModal(false);
+            }}
+          >
+            Save
+          </Button>
+        </DialogActions>
+      </Dialog>
+      {/* email modal close here */}
     </div>
   );
 };

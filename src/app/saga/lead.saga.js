@@ -17,6 +17,9 @@ import {
   editLeadRequest,
   editLeadRequestError,
   editLeadRequestSuccess,
+  emailDetailsError,
+  emailDetailsRequest,
+  emailDetailsSuc,
   getLeadError,
   getLeadLoading,
   getLeadSuc
@@ -27,9 +30,11 @@ import addlead, {
   changeStatus,
   deleteLead,
   editLead,
-  getLead
+  getLead,
+  sendEmailData
 } from "app/leadservices/leadservice";
 import { call, put, takeEvery } from "redux-saga/effects";
+import { func } from "prop-types";
 
 //function for post lead
 
@@ -132,4 +137,18 @@ function* asyncCallLead(ac) {
 
 export function* watcherCallLead() {
   yield takeEvery(callDetailsRequest().type, asyncCallLead);
+}
+
+function* asyncEmailData(ac){
+try{
+  let d = yield call( sendEmailData , ac.payload);
+  yield put(emailDetailsSuc(d))
+}
+catch(error){
+  yield put(emailDetailsError(error))
+}
+}
+
+export function* watchEmailData(){
+  yield takeEvery(emailDetailsRequest().type, asyncEmailData);
 }
