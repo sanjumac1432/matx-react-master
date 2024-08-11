@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { useDispatch } from "react-redux";
 
 const initialState = {
   lead: [],
@@ -8,7 +9,8 @@ const initialState = {
   DeleteInfo: {},
   editObj: {},
   AddEditInfo: {},
-  changeStatus: {}
+  changeStatus: {},
+  callDetails: {}
 };
 
 const leadSlice = createSlice({
@@ -80,6 +82,17 @@ const leadSlice = createSlice({
     changeError: (state, action) => {
       state.isLoading = false;
       state.error = action.payload;
+    },
+    callDetailsRequest: (state, action) => {
+      state.isLoading = true;
+    },
+    callDetailsSuc: (state, action) => {
+      state.isLoading = false;
+      state.callDetails = action.payload;
+    },
+    callDetailsError: (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload;
     }
   }
 });
@@ -102,7 +115,11 @@ export const {
   AddEditInfoError,
   changeError,
   changeRequest,
-  changeSuc
+  changeSuc,
+  callDetailsError,
+  callDetailsSuc,
+  callDetailsRequest
+
 } = leadSlice.actions;
 
 export default leadSlice.reducer;

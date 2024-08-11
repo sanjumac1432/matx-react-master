@@ -5,6 +5,8 @@ import LeadFrom from "./leadFrom";
 
 import { LeadGrid } from "./leadGrib";
 import { useState } from "react";
+import Layout1Topbar from "app/components/MatxLayout/Layout1/Layout1Topbar";
+import { MatxSearchBox } from "app/components";
 
 // STYLED COMPONENTS
 const Container = styled("div")(({ theme }) => ({
@@ -31,16 +33,56 @@ export default function Lead() {
 
   return (
     <>
-      <LeadFrom open={sidebarOpen} onClose={openDrawer} editId={editId} setEditId={setEditId} />
-
-      <Button
-        onClick={() => {
-          openDrawer();
-          setEditId(null);
+      <div
+        className="Lead-header"
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          padding: "20px"
         }}
       >
-        +Add Leads
-      </Button>
+        <div
+          className="lead"
+          style={{
+            padding: "0px 20px"
+          }}
+        >
+          <h2
+            style={{
+              fontSize: "32px",
+              margin: "0px"
+            }}
+          >
+            Leads
+          </h2>
+        </div>
+        <div className="Buttons">
+          <MatxSearchBox
+            style={{
+              margin: "0px 10px"
+            }}
+          />
+
+          <Button
+            onClick={() => {
+              openDrawer();
+              setEditId(null);
+            }}
+            style={{
+              background: "#4791db",
+              color: "white",
+              fontSize: "18px",
+              fontWeight: "600",
+              padding: " 10px 20px"
+            }}
+          >
+            +Add Leads
+          </Button>
+        </div>
+      </div>
+
+      <LeadFrom open={sidebarOpen} onClose={openDrawer} editId={editId} setEditId={setEditId} />
 
       <LeadGrid open={sidebarOpen} openDrawer={openDrawer} handelEdit={handelEdit} editI={editId} />
     </>

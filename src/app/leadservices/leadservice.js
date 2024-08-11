@@ -40,3 +40,9 @@ export const changeStatus = async (changeId) => {
 
   return data.data;
 };
+
+export const CallDetailsSend = async (call) => {
+  let data = await authFetch.post("phoneCall/add", call);
+
+  return data.data;
+};
